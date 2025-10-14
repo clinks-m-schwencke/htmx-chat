@@ -1,2 +1,2 @@
-# htmx-chat
-A Django based HTMX powered team chat application. Made for a personal growth project.
+# HTMX~Django chat
+A thread based chat application written without a front-end framework, server driven with Django and HTMX
