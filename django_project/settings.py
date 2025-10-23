@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "polls.apps.PollsConfig",
+    "chat.apps.ChatConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -129,3 +130,12 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Login url settings
+LOGIN_URL = "/login"
+
+LOGIN_REDIRECT_URL = "/"
+
+LOGOUT_URL = "/logout"
+
+LOGOUT_REDIRECT_URL = "/login"

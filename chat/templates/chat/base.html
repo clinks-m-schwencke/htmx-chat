@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- TODO: Make language change -->
+<html lang="en">
+
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'chat/pico.slate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
+    <title>{% block title %} | HTMX Chat {% endblock %} </title>
+</head>
+
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'chat/pico.slate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
+    <title>{% block title %} | HTMX Chat {% endblock %} </title>
+</head>
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<body>
+    <main>
+        <h1>
+            Chat index page!
+        </h1>
+        {% if user.is_authenticated %}
+        <p>Hi {{user.username}}!</p>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Log out</button>
+        </form>
+        {% else %}
+        <p>You are not logged in.</p>
+        <a href="{% url 'login' %}">Log in</a>
+        {% endif %}
+    </main>
+</body>
+{% endblock %}
