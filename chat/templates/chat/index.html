@@ -1,10 +1,4 @@
-{% load static %}
-
-<head>
-    <link rel="stylesheet" href="{% static 'chat/pico.slate.min.css' %}">
-    <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
-    <title>{% block title %} | HTMX Chat {% endblock %} </title>
-</head>
+{% extends "chat/base.html" %}
 
 {% block title %}Home{% endblock %}
 
@@ -23,7 +17,7 @@
         </form>
         {% else %}
         <p>You are not logged in.</p>
-        <a href="{% url 'login' %}">Log in</a>
+        <a href="{% url 'chat:login' %}">Log in</a>
         {% endif %}
     </main>
 </body>

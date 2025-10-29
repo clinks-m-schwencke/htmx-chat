@@ -7,10 +7,29 @@
 <head>
     <link rel="stylesheet" href="{% static 'chat/pico.slate.min.css' %}">
     <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
-    <title>{% block title %} | HTMX Chat {% endblock %} </title>
+    <title>{% block title %}Home{% endblock %} | HTMX Chat</title>
 </head>
 
 <body>
+    <header>
+        <nav>
+            <div>
+                <h1>
+                    <span class="icon is-large">
+                        <!-- <img src="htmx-chat.svg"> -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-message-square-code-icon lucide-message-square-code">
+                            <path d="M10 7.5 8 10l2 2.5" />
+                            <path d="m14 7.5 2 2.5-2 2.5" />
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                    </span>
+                    HTMX Chat
+                </h1>
+            </div>
+        </nav>
+    </header>
     {% block content %}
     {% endblock %}
 </body>

@@ -1,0 +1,18 @@
+{% extends "chat/base.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+<main class="container flex-row">
+    <article class="centre-card content">
+        <h2>Log In</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Log In</button>
+        </form>
+    </article>
+</main>
+{% endblock %}
