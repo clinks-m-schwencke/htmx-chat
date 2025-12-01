@@ -7,6 +7,11 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code 
+  #Redis
+  redis:
+    image: redis:8.4.0-alpine
+    ports:
+      - '6379:6379'
   db:
     image: postgres:14
     volumes:

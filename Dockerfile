@@ -3,7 +3,7 @@
 # We use the keyword 'FROM' to do that.
 # In our example, we want import the python image.
 # So we write 'python' for the image name and 'latest' for the version.
-FROM python:3.13.3-slim-bullseye
+FROM python:3.14.0-slim-bookworm
 
 # Set environmet variables
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
