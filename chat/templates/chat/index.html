@@ -1,23 +1,28 @@
 {% extends "chat/base.html" %}
 
-{% block title %}Home{% endblock %}
+{% load i18n %}
+
+{% block title %}{% translate "Home" %}{% endblock %}
 
 {% block content %}
 
 <body>
     <main>
         <h1>
-            Chat index page!
+            {% translate "Chat index page!" %}
         </h1>
         {% if user.is_authenticated %}
-        <p>Hi {{user.username}}!</p>
+        <p>
+            {{user.username}}
+            {% blocktranslate with username=user.username %}Hi {{username}}!{% endblocktranslate %}
+        </p>
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
-            <button type="submit">Log out</button>
+            <button type="submit">{% translate "Log out" %}</button>
         </form>
         {% else %}
-        <p>You are not logged in.</p>
-        <a href="{% url 'chat:login' %}">Log in</a>
+        <p>{% translate "You are not logged in." %}</p>
+        <a href="{% url 'chat:login' %}">{% translate "Log in" %}</a>
         {% endif %}
     </main>
 </body>

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,10 +45,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.LoginRequiredMiddleware",
+    # "django.contrib.auth.middleware.LoginRequiredMiddleware",
+    "chat.middleware.auth.LoginRequiredWithExceptionsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -90,6 +93,14 @@ DATABASES = {
     }
 }
 
+# Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://username:password@127.0.0.1:6379",
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -113,13 +124,22 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en-au"
+# LANGUAGE_CODE = "ja-jp"
 
 TIME_ZONE = "Asia/Tokyo"
 
 USE_I18N = True
+USE_L10N = True
 
 USE_TZ = True
+
+LANGUAGES = [
+    ("en", "English"),
+    ("ja", "日本語"),
+]
+
+LOCALE_PATHS = [BASE_DIR / "locale"]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -140,3 +160,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_URL = "/logout"
 
 LOGOUT_REDIRECT_URL = "/login"
+
+LOGIN_REQUIRED_URL_EXCEPTIONS = [
+    r"^/i18n/",
+]

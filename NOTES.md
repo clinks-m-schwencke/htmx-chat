@@ -221,4 +221,12 @@ i = "Interactive", keeps the STDIN open
 t = Allocates a pseudo TTY
 :::
 
+## Internationalisation
+
+For django's i18n, we need the GNU text tool `gettext`. We can install it with brew.
+
+```sh
+brew install gettext
+```
+
 

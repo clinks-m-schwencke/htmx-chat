@@ -1,6 +1,8 @@
 asgiref==3.8.1
 Django==5.2
 django-debug-toolbar==6.0.0
-psycopg==3.2.9
-psycopg-binary==3.2.9
+hiredis==3.3.0
+psycopg==3.2.13
+psycopg-binary==3.2.13
+redis==7.1.0
 sqlparse==0.5.3

@@ -1,8 +1,9 @@
-<!DOCTYPE html>
-<!-- TODO: Make language change -->
-<html lang="en">
-
 {% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+
 
 <head>
     <link rel="stylesheet" href="{% static 'chat/pico.slate.min.css' %}">
@@ -32,6 +33,21 @@
     </header>
     {% block content %}
     {% endblock %}
+    <footer>
+        <!-- Simplified Language Switcher Links -->
+        <div class="lang-switcher" style="margin-top:1em;">
+            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="language" value="en">
+                <button type="submit" style="background:none; border:none; cursor:pointer;">🇺🇸 English</button>
+            </form>
+            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="language" value="ja">
+                <button type="submit" style="background:none; border:none; cursor:pointer;">🇯🇵 日本語</button>
+            </form>
+        </div>
+    </footer>
 </body>
 
 </html>
