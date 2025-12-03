@@ -13,7 +13,6 @@
         </h1>
         {% if user.is_authenticated %}
         <p>
-            {{user.username}}
             {% blocktranslate with username=user.username %}Hi {{username}}!{% endblocktranslate %}
         </p>
         <form method="post" action="{% url 'logout' %}">
