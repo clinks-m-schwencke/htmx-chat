@@ -6,31 +6,82 @@
 
 
 <head>
-    <link rel="stylesheet" href="{% static 'chat/pico.slate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'chat/pico.indigo.min.css' %}">
     <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
     <title>{% block title %}Home{% endblock %} | HTMX Chat</title>
+    <script src="{% static 'chat/htmx.min.js' %}" defer></script>
 </head>
 
 <body>
     <header>
         <nav>
-            <div>
-                <h1>
-                    <span class="icon is-large">
-                        <!-- <img src="htmx-chat.svg"> -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-message-square-code-icon lucide-message-square-code">
-                            <path d="M10 7.5 8 10l2 2.5" />
-                            <path d="m14 7.5 2 2.5-2 2.5" />
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                        </svg>
-                    </span>
-                    HTMX Chat
-                </h1>
-            </div>
+            <ul>
+                <li>
+                    <h1>
+                        <span class="icon is-large">
+                            <!-- <img src="htmx-chat.svg"> -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-message-square-code-icon lucide-message-square-code">
+                                <path d="M10 7.5 8 10l2 2.5" />
+                                <path d="m14 7.5 2 2.5-2 2.5" />
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </span>
+                        HTMX Chat
+                    </h1>
+                </li>
+            </ul>
+            <ul style="position: relative;">
+                {% if user.is_authenticated %}
+                <li>
+                    <details class="dropdown">
+                        <summary role="button" class="secondary">
+                            {% if user.first_name or user.last_name %}
+                            {{user.first_name}} {{user.last_name}}
+                            {% else %}
+                            {{user.username}}
+                            {% endif %}
+                        </summary>
+                        <ul dir="rtl" style="width: 100%;">
+                            <li>
+                                <a href="#">
+                                    {% translate "Settings" %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="document.querySelector('#dialog-logout').showModal();">
+                                    {% translate "Log out" %}
+                                </a>
+                            </li>
+                        </ul>
+                    </details>
+                </li>
+                {% endif %}
+            </ul>
+
         </nav>
     </header>
+
+    <!-- Log out Dialog -->
+    <dialog id="dialog-logout">
+        <form style="display: contents;" method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <article>
+                <h3>
+                    {% translate "Really Log Out?" %}
+                </h3>
+                <footer>
+                    <button type="submit" formmethod="dialog" class="outline">
+                        {% translate "Cancel" %}
+                    </button>
+                    <button type="submit">{% translate "Log out" %}</button>
+                </footer>
+            </article>
+        </form>
+    </dialog>
+
     {% block content %}
     {% endblock %}
     <footer>

@@ -26,6 +26,13 @@ nav h6 {
     margin-bottom: 0;
 }
 
+header>nav {
+    padding: 0 30px;
+}
+
+dialog footer>button[type=submit] {
+    width: unset;
+}
 
 .flex-row {
     display: flex;
