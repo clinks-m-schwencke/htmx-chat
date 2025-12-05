@@ -30,6 +30,10 @@ header>nav {
     padding: 0 30px;
 }
 
+nav details.dropdown {
+    display: inline-block;
+}
+
 dialog footer>button[type=submit] {
     width: unset;
 }
