@@ -6,23 +6,56 @@
 
 {% block content %}
 
-<body>
-    <main>
-        <h1>
-            {% translate "Chat index page!" %}
-        </h1>
-        {% if user.is_authenticated %}
-        <p>
-            {% blocktranslate with username=user.username %}Hi {{username}}!{% endblocktranslate %}
-        </p>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">{% translate "Log out" %}</button>
-        </form>
-        {% else %}
-        <p>{% translate "You are not logged in." %}</p>
-        <a href="{% url 'chat:login' %}">{% translate "Log in" %}</a>
-        {% endif %}
-    </main>
-</body>
+<main class="container">
+    <!-- <h1> -->
+    <!--     {% translate "Chat index page!" %} -->
+    <!-- </h1> -->
+    <!-- {% if user.is_authenticated %} -->
+    <!-- <p> -->
+    <!--     {% blocktranslate with username=user.username %}Hi {{username}}!{% endblocktranslate %} -->
+    <!-- </p> -->
+    <!-- <form method="post" action="{% url 'logout' %}"> -->
+    <!--     {% csrf_token %} -->
+    <!--     <button type="submit">{% translate "Log out" %}</button> -->
+    <!-- </form> -->
+    <!-- {% else %} -->
+    <!-- <p>{% translate "You are not logged in." %}</p> -->
+    <!-- <a href="{% url 'chat:login' %}">{% translate "Log in" %}</a> -->
+    <!-- {% endif %} -->
+
+    {% if thread_list %}
+    {% for thread in thread_list %}
+    {% partialdef thread-card inline %}
+    <article>
+        <div class="flex-row flex-gap">
+            <a href="#">{{ thread.thread_title }}</a>
+            <label>
+                <input type="checkbox" {% if thread.is_resolved %} checked {% endif %}>
+                {% translate "Resolved" %}
+            </label>
+        </div>
+        <div class="flex-row flex-gap">
+            <p>
+                {% if thread.latest_message_author %}
+                {{ thread.latest_message_author }}
+                {% else %}
+                {{ thread.author }}
+                {% endif %}
+            </p>
+            <p>
+                {% if thread.latest_message_body %}
+                {{ thread.latest_message_body }}
+                {% else %}
+                {{ thread.body }}
+                {% endif %}
+            </p>
+        </div>
+    </article>
+
+    {% endpartialdef %}
+    {% endfor %}
+    {% else %}
+    <p>No threads are available. Would you like to create one?</p>
+    {% endif %}
+</main>
 {% endblock %}

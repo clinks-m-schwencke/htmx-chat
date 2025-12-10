@@ -1,0 +1,12 @@
+{% extends "chat/base.html" %}
+
+{% load i18n %}
+
+<!-- TODO: Make the title the title of the thread -->
+{% block title %}{% translate "Thread" %}{% endblock %}
+
+{% block content %}
+<main>
+    <h1>{{ object.thread_title }} </h1>
+</main>
+{% endblock %}

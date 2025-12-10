@@ -1,0 +1,30 @@
+{% extends "chat/base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% translate "New Thread" %}{% endblock %}
+
+{% block content %}
+
+<main class="container">
+  <article>
+    <form method="post">
+      {% csrf_token %}
+      {{ form }}
+      <!-- <fieldset> -->
+      <!--     <label> -->
+      <!--         {% translate "New Thread" %} -->
+      <!--         <input name="thread_title" type="text"> -->
+      <!--     </label> -->
+      <!--     TODO: Watcher add -->
+      <!--     <label> -->
+      <!--         {% translate "Description" %} -->
+      <!--         <textarea name="description"></textarea> -->
+      <!--     </label> -->
+      <!-- </fieldset> -->
+      <button type="submit">{% translate "Create thread" %}</button>
+    </form>
+  </article>
+
+</main>
+{% endblock %}
