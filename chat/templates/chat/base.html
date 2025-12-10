@@ -12,7 +12,7 @@
     <script src="{% static 'chat/htmx.min.js' %}" defer></script>
 </head>
 
-<body>
+<body hx-headers:inherited='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <header>
         <nav>
             <ul>
@@ -51,7 +51,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" onclick="document.querySelector('#dialog-logout').showModal();">
+                                <a href="javascript:;" onclick="document.querySelector('#dialog-logout').showModal();">
                                     {% translate "Log out" %}
                                 </a>
                             </li>

@@ -39,20 +39,15 @@ class Thread(TimeStampedModel):
         blank=True,
     )
     thread_title = models.CharField(max_length=200)
-    body = models.TextField()
-    is_edited = models.BooleanField()
-    is_deleted = models.BooleanField()
-    is_resolved = models.BooleanField()
+    body = models.TextField(blank=True)
+    is_edited = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    is_resolved = models.BooleanField(default=False)
     resolved_suggesters = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name="user_suggests_resolve_for_thread",
         blank=True,
     )
-
-    def most_recent_message(self):
-        messages = self.thread_messages.all()
-        return messages
-        pass
 
     def __str__(self):
         return str(self.thread_title)
