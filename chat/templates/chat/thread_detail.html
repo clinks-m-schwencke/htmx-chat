@@ -7,6 +7,28 @@
 
 {% block content %}
 <main>
-    <h1>{{ object.thread_title }} </h1>
+    <article>
+        <h3>{{ object.thread_title }} </h3>
+        <p>{{ object.body }}</p>
+        <div class="flex-row">
+            <span>{{ object.author }}</span>
+            {% for watcher in object.thread_watchers %}
+            <span>{{ watcher }}</span>
+            {% endfor %}
+        </div>
+    </article>
+    {% for message in messages %}
+    <article>
+        {{ message.body }}
+    </article>
+    {% endfor %}
 </main>
+<footer>
+    <article class="container">
+        <form>
+            <textarea name="message"></textarea>
+            <button type="submit">{% translate "Send" %}</button>
+        </form>
+    </article>
+</footer>
 {% endblock %}

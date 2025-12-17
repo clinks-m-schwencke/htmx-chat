@@ -17,20 +17,22 @@
         <nav>
             <ul>
                 <li>
-                    <h1>
-                        <span class="icon is-large">
-                            <!-- <img src="htmx-chat.svg"> -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-message-square-code-icon lucide-message-square-code">
-                                <path d="M10 7.5 8 10l2 2.5" />
-                                <path d="m14 7.5 2 2.5-2 2.5" />
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                            </svg>
-                        </span>
-                        HTMX Chat
-                    </h1>
+                    <a href="/">
+                        <h1>
+                            <span class="icon is-large">
+                                <!-- <img src="htmx-chat.svg"> -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-message-square-code-icon lucide-message-square-code">
+                                    <path d="M10 7.5 8 10l2 2.5" />
+                                    <path d="m14 7.5 2 2.5-2 2.5" />
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                </svg>
+                            </span>
+                            HTMX Chat
+                        </h1>
+                    </a>
                 </li>
             </ul>
             <ul>
@@ -51,6 +53,16 @@
                                 </a>
                             </li>
                             <li>
+                                <a hx-post="{% url 'set_language' %}" hx-target="body" hx-vals='{"language": "en"}'>
+                                    English
+                                </a>
+                            </li>
+                            <li>
+                                <a hx-post="{% url 'set_language' %}" hx-target="body" hx-vals='{"language": "ja"}'>
+                                    日本語
+                                </a>
+                            </li>
+                            <li>
                                 <a href="javascript:;" onclick="document.querySelector('#dialog-logout').showModal();">
                                     {% translate "Log out" %}
                                 </a>
@@ -60,9 +72,27 @@
                 </li>
                 {% endif %}
             </ul>
-
         </nav>
     </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- <footer> -->
+    <!-- Simplified Language Switcher Links -->
+    <!--     <div class="lang-switcher" style="margin-top:1em;"> -->
+    <!--         <form action="{% url 'set_language' %}" method="post" style="display:inline;"> -->
+    <!--             {% csrf_token %} -->
+    <!--             <input type="hidden" name="language" value="en"> -->
+    <!--             <button type="submit" style="background:none; border:none; cursor:pointer;">🇺🇸 English</button> -->
+    <!--         </form> -->
+    <!--         <form action="{% url 'set_language' %}" method="post" style="display:inline;"> -->
+    <!--             {% csrf_token %} -->
+    <!--             <input type="hidden" name="language" value="ja"> -->
+    <!--             <button type="submit" style="background:none; border:none; cursor:pointer;">🇯🇵 日本語</button> -->
+    <!--         </form> -->
+    <!--     </div> -->
+    <!-- </footer> -->
 
     <!-- Log out Dialog -->
     <dialog id="dialog-logout">
@@ -81,24 +111,6 @@
             </article>
         </form>
     </dialog>
-
-    {% block content %}
-    {% endblock %}
-    <footer>
-        <!-- Simplified Language Switcher Links -->
-        <div class="lang-switcher" style="margin-top:1em;">
-            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <input type="hidden" name="language" value="en">
-                <button type="submit" style="background:none; border:none; cursor:pointer;">🇺🇸 English</button>
-            </form>
-            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <input type="hidden" name="language" value="ja">
-                <button type="submit" style="background:none; border:none; cursor:pointer;">🇯🇵 日本語</button>
-            </form>
-        </div>
-    </footer>
 </body>
 
 </html>

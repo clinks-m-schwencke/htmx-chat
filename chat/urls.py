@@ -6,10 +6,12 @@ from . import views
 
 app_name = "chat"
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    # path("thread", views.thread, name="thread"),
-    path("thread/new", views.CreateThreadView.as_view(), name="thread_new"),
-    path("thread/<int:pk>", views.ThreadDetailView.as_view(), name="thread_detail"),
+    path("", views.index, name="index"),
+    path("thread", views.thread_handler, name="thread"),
+    path("thread/new", views.thread_new, name="thread_new"),
+    path("thread/create", views.CreateThreadView.as_view(), name="thread_create"),
+    path("thread/<int:pk>", views.thread_get, name="thread_detail"),
+    # path("thread/<int:pk>", views.thread_get, name="thread_detail"),
     path("login", views.LoginView.as_view(), name="login"),
 ]
 # path("<int:pk>/", views.DetailView.as_view(), name="detail"),
