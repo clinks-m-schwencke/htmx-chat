@@ -18,16 +18,23 @@
         </div>
     </article>
     {% for message in messages %}
-    <article>
-        {{ message.body }}
+    <article class="flex-row flex-gap">
+        <div>
+            {{ message.author }}
+        </div>
+        <div>
+            {{ message.body }}
+        </div>
     </article>
     {% endfor %}
 </main>
 <footer>
     <article class="container">
-        <form>
+        <form hx-post="/chat/{{object.pk}}" hx-swap="innerHTML">
+            {% partialdef message_form inline %}
             <textarea name="message"></textarea>
             <button type="submit">{% translate "Send" %}</button>
+            {% endpartialdef %}
         </form>
     </article>
 </footer>

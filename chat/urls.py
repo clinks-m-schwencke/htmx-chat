@@ -7,6 +7,7 @@ from . import views
 app_name = "chat"
 urlpatterns = [
     path("", views.index, name="index"),
+    path("chat/<int:thread_id>", views.chat_handler, name="chat"),
     path("thread", views.thread_handler, name="thread"),
     path("thread/new", views.thread_new, name="thread_new"),
     path("thread/create", views.CreateThreadView.as_view(), name="thread_create"),

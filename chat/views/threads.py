@@ -90,7 +90,8 @@ def thread_post(request: HttpRequest) -> HttpResponse:
 
 
 def thread_get(request: HttpRequest, pk) -> HttpResponse:
-    context = {"object": get_object_or_404(Thread, pk=pk)}
+    thread = get_object_or_404(Thread, pk=pk)
+    context = {"object": thread, "messages": thread.thread_messages.all()}
     return TemplateResponse(request, "chat/thread_detail.html", context)
 
 
