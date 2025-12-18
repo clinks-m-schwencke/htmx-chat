@@ -38,6 +38,13 @@ dialog footer>button[type=submit] {
     width: unset;
 }
 
+/* button.link { */
+/*     border: none; */
+/*     background: none; */
+/*     cursor: pointer; */
+/*     padding: 0; */
+/* } */
+
 .flex-row {
     display: flex;
     flex-direction: row;
@@ -88,4 +95,18 @@ dialog footer>button[type=submit] {
     position: relative;
     top: -.05em;
     vertical-align: middle;
+}
+
+details.dropdown>summary+ul li button {
+    display: block;
+    margin: calc(var(--pico-form-element-spacing-vertical) * -.5) calc(var(--pico-form-element-spacing-horizontal) * -1);
+    padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal);
+    overflow: hidden;
+    border-radius: 0;
+    color: var(--pico-dropdown-color);
+    text-decoration: none;
+    text-overflow: ellipsis;
+    background: none;
+    border: none;
+    cursor: pointer;
 }

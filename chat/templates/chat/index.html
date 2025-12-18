@@ -28,28 +28,39 @@
     {% partialdef thread-card inline %}
     <article>
         <div class="flex-row flex-gap">
-            <a href="#">{{ thread.thread_title }}</a>
+            <a href="{% url 'chat:thread_detail' thread.pk %}">{{ thread.thread_title }}</a>
             <label>
                 <input type="checkbox" {% if thread.is_resolved %} checked {% endif %}>
                 {% translate "Resolved" %}
             </label>
-        </div>
-        <div class="flex-row flex-gap">
-            <p>
-                {% if thread.latest_message_author %}
-                {{ thread.latest_message_author }}
-                {% else %}
+            <span>
                 {{ thread.author }}
-                {% endif %}
-            </p>
-            <p>
-                {% if thread.latest_message_body %}
-                {{ thread.latest_message_body }}
-                {% else %}
-                {{ thread.body }}
-                {% endif %}
-            </p>
+            </span>
+
+            {% for w in thread.watchers.all %}
+            <span>
+                {{ w.name }}
+            </span>
+            {% endfor %}
         </div>
+        <section>
+            <div class="flex-row flex-gap">
+                <p>
+                    {% if thread.latest_message_author %}
+                    {{ thread.latest_message_author }}
+                    {% else %}
+                    {{ thread.author }}
+                    {% endif %}
+                </p>
+                <p>
+                    {% if thread.latest_message_body %}
+                    {{ thread.latest_message_body }}
+                    {% else %}
+                    {{ thread.body }}
+                    {% endif %}
+                </p>
+            </div>
+        </section>
     </article>
 
     {% endpartialdef %}

@@ -66,8 +66,8 @@ class Message(TimeStampedModel):
         related_name="message_author",
     )
     body = models.TextField()
-    is_edited = models.BooleanField()
-    is_deleted = models.BooleanField()
+    is_edited = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.body)

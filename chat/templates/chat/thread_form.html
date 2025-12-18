@@ -1,0 +1,50 @@
+{% extends "chat/base.html" %}
+
+{% load i18n %}
+
+{% block title %}
+
+{% if is_new %}
+{% translate "New Thread" %}
+{% else %}
+{% translate "Edit Thread" %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<main class="container">
+    <article>
+        <form method="post" action="/thread">
+            {% csrf_token %}
+            <fieldset>
+                <label>
+                    {% translate "New Thread" %}
+                    <input name="thread_title" type="text">
+                </label>
+                <label>
+                    {% translate "Watchers" %}
+                    <select name="watchers" multiple>
+                        {% for w in watchers %}
+                        <option value="{{w.id}}">
+                            {% if w.first_name or w.last_name %}
+                            {{w.first_name}} {{w.last_name}}
+                            {% else %}
+                            {{w.username}}
+                            {% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label>
+                    {% translate "Description" %}
+                    <textarea name="body"></textarea>
+                </label>
+            </fieldset>
+            <button type="submit">{% translate "Create thread" %}</button>
+        </form>
+    </article>
+
+</main>
+{% endblock %}
