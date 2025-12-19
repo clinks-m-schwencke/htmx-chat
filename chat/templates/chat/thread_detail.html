@@ -32,7 +32,7 @@
     <article class="container">
         <form hx-post="/chat/{{object.pk}}" hx-swap="innerHTML">
             {% partialdef message_form inline %}
-            <textarea name="message"></textarea>
+            <textarea name="message" autocomplete="off"></textarea>
             <button type="submit">{% translate "Send" %}</button>
             {% endpartialdef %}
         </form>
