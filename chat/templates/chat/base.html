@@ -6,111 +6,117 @@
 
 
 <head>
-    <link rel="stylesheet" href="{% static 'chat/pico.indigo.min.css' %}">
-    <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
-    <title>{% block title %}Home{% endblock %} | HTMX Chat</title>
-    <script src="{% static 'chat/htmx.min.js' %}" defer></script>
+  <link rel="stylesheet" href="{% static 'chat/pico.indigo.min.css' %}">
+  <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
+  <title>{% block title %}Home{% endblock %} | HTMX Chat</title>
+  <script src="{% static 'chat/htmx.min.js' %}"></script>
+  <script src="{% static 'chat/hx-ws.js' %}"></script>
+  <script>
+    // Set autoconnect to true (The documentation lies)
+    htmx.config.websockets = {
+      autoConnect: true,
+    }
+  </script>
 </head>
 
 <body hx-headers:inherited='{"X-CSRFToken": "{{ csrf_token }}"}'>
-    <header>
-        <nav>
-            <ul>
-                <li>
-                    <a href="/">
-                        <h1>
-                            <span class="icon is-large">
-                                <!-- <img src="htmx-chat.svg"> -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="lucide lucide-message-square-code-icon lucide-message-square-code">
-                                    <path d="M10 7.5 8 10l2 2.5" />
-                                    <path d="m14 7.5 2 2.5-2 2.5" />
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                </svg>
-                            </span>
-                            HTMX Chat
-                        </h1>
-                    </a>
-                </li>
+  <header>
+    <nav>
+      <ul>
+        <li>
+          <a href="/">
+            <h1>
+              <span class="icon is-large">
+                <!-- <img src="htmx-chat.svg"> -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-message-square-code-icon lucide-message-square-code">
+                  <path d="M10 7.5 8 10l2 2.5" />
+                  <path d="m14 7.5 2 2.5-2 2.5" />
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </span>
+              HTMX Chat
+            </h1>
+          </a>
+        </li>
+      </ul>
+      <ul>
+        {% if user.is_authenticated %}
+        <li>
+          <details class="dropdown">
+            <summary role="button" class="secondary">
+              {% if user.first_name or user.last_name %}
+              {{user.first_name}} {{user.last_name}}
+              {% else %}
+              {{user.username}}
+              {% endif %}
+            </summary>
+            <ul dir="rtl" style="width: 100%;">
+              <li>
+                <a href="#">
+                  {% translate "Settings" %}
+                </a>
+              </li>
+              <li>
+                <a hx-post="{% url 'set_language' %}" hx-target="body" hx-vals='{"language": "en"}'>
+                  English
+                </a>
+              </li>
+              <li>
+                <a hx-post="{% url 'set_language' %}" hx-target="body" hx-vals='{"language": "ja"}'>
+                  日本語
+                </a>
+              </li>
+              <li>
+                <a href="javascript:;" onclick="document.querySelector('#dialog-logout').showModal();">
+                  {% translate "Log out" %}
+                </a>
+              </li>
             </ul>
-            <ul>
-                {% if user.is_authenticated %}
-                <li>
-                    <details class="dropdown">
-                        <summary role="button" class="secondary">
-                            {% if user.first_name or user.last_name %}
-                            {{user.first_name}} {{user.last_name}}
-                            {% else %}
-                            {{user.username}}
-                            {% endif %}
-                        </summary>
-                        <ul dir="rtl" style="width: 100%;">
-                            <li>
-                                <a href="#">
-                                    {% translate "Settings" %}
-                                </a>
-                            </li>
-                            <li>
-                                <a hx-post="{% url 'set_language' %}" hx-target="body" hx-vals='{"language": "en"}'>
-                                    English
-                                </a>
-                            </li>
-                            <li>
-                                <a hx-post="{% url 'set_language' %}" hx-target="body" hx-vals='{"language": "ja"}'>
-                                    日本語
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" onclick="document.querySelector('#dialog-logout').showModal();">
-                                    {% translate "Log out" %}
-                                </a>
-                            </li>
-                        </ul>
-                    </details>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+          </details>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
 
-    {% block content %}
-    {% endblock %}
+  {% block content %}
+  {% endblock %}
 
-    <!-- <footer> -->
-    <!-- Simplified Language Switcher Links -->
-    <!--     <div class="lang-switcher" style="margin-top:1em;"> -->
-    <!--         <form action="{% url 'set_language' %}" method="post" style="display:inline;"> -->
-    <!--             {% csrf_token %} -->
-    <!--             <input type="hidden" name="language" value="en"> -->
-    <!--             <button type="submit" style="background:none; border:none; cursor:pointer;">🇺🇸 English</button> -->
-    <!--         </form> -->
-    <!--         <form action="{% url 'set_language' %}" method="post" style="display:inline;"> -->
-    <!--             {% csrf_token %} -->
-    <!--             <input type="hidden" name="language" value="ja"> -->
-    <!--             <button type="submit" style="background:none; border:none; cursor:pointer;">🇯🇵 日本語</button> -->
-    <!--         </form> -->
-    <!--     </div> -->
-    <!-- </footer> -->
+  <!-- <footer> -->
+  <!-- Simplified Language Switcher Links -->
+  <!--     <div class="lang-switcher" style="margin-top:1em;"> -->
+  <!--         <form action="{% url 'set_language' %}" method="post" style="display:inline;"> -->
+  <!--             {% csrf_token %} -->
+  <!--             <input type="hidden" name="language" value="en"> -->
+  <!--             <button type="submit" style="background:none; border:none; cursor:pointer;">🇺🇸 English</button> -->
+  <!--         </form> -->
+  <!--         <form action="{% url 'set_language' %}" method="post" style="display:inline;"> -->
+  <!--             {% csrf_token %} -->
+  <!--             <input type="hidden" name="language" value="ja"> -->
+  <!--             <button type="submit" style="background:none; border:none; cursor:pointer;">🇯🇵 日本語</button> -->
+  <!--         </form> -->
+  <!--     </div> -->
+  <!-- </footer> -->
 
-    <!-- Log out Dialog -->
-    <dialog id="dialog-logout">
-        <form style="display: contents;" method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <article>
-                <h3>
-                    {% translate "Really Log Out?" %}
-                </h3>
-                <footer>
-                    <button type="submit" formmethod="dialog" class="outline">
-                        {% translate "Cancel" %}
-                    </button>
-                    <button type="submit">{% translate "Log out" %}</button>
-                </footer>
-            </article>
-        </form>
-    </dialog>
+  <!-- Log out Dialog -->
+  <dialog id="dialog-logout">
+    <form style="display: contents;" method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <article>
+        <h3>
+          {% translate "Really Log Out?" %}
+        </h3>
+        <footer>
+          <button type="submit" formmethod="dialog" class="outline">
+            {% translate "Cancel" %}
+          </button>
+          <button type="submit">{% translate "Log out" %}</button>
+        </footer>
+      </article>
+    </form>
+  </dialog>
 </body>
 
 </html>

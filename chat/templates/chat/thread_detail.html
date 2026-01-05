@@ -7,35 +7,37 @@
 
 {% block content %}
 <main>
-    <article>
-        <h3>{{ object.thread_title }} </h3>
-        <p>{{ object.body }}</p>
-        <div class="flex-row">
-            <span>{{ object.author }}</span>
-            {% for watcher in object.thread_watchers %}
-            <span>{{ watcher }}</span>
-            {% endfor %}
-        </div>
-    </article>
+  <article>
+    <h3>{{ object.thread_title }} </h3>
+    <p>{{ object.body }}</p>
+    <div class="flex-row">
+      <span>{{ object.author }}</span>
+      {% for watcher in object.thread_watchers %}
+      <span>{{ watcher }}</span>
+      {% endfor %}
+    </div>
+  </article>
+  <section id="message-list">
     {% for message in messages %}
     <article class="flex-row flex-gap">
-        <div>
-            {{ message.author }}
-        </div>
-        <div>
-            {{ message.body }}
-        </div>
+      <div>
+        {{ message.author }}
+      </div>
+      <div>
+        {{ message.body }}
+      </div>
     </article>
     {% endfor %}
+  </section>
 </main>
 <footer>
-    <article class="container">
-        <form hx-post="/chat/{{object.pk}}" hx-swap="innerHTML">
-            {% partialdef message_form inline %}
-            <textarea name="message" autocomplete="off"></textarea>
-            <button type="submit">{% translate "Send" %}</button>
-            {% endpartialdef %}
-        </form>
-    </article>
+  <article hx-ws:connect="/ws/chat/{{object.pk}}" hx-target="#message-list" hx-swap="append" class="container">
+    <form hx-ws:send id="chat-form">
+      {% partialdef message_form inline %}
+      <textarea name="message" autocomplete="off"></textarea>
+      <button type="submit">{% translate "Send" %}</button>
+      {% endpartialdef %}
+    </form>
+  </article>
 </footer>
 {% endblock %}

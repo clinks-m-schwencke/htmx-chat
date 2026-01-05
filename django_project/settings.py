@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "polls.apps.PollsConfig",
     "chat.apps.ChatConfig",
     "django.contrib.admin",
@@ -73,8 +74,19 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "django_project.wsgi.application"
+ASGI_APPLICATION = "django_project.asgi.application"
+# WSGI_APPLICATION = "django_project.wsgi.application"
 
+# Websocket channel layers
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            # "hosts": [("localhost", 6379)],
+            "hosts": ["redis://redis:6379/1"],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -95,12 +107,12 @@ DATABASES = {
 }
 
 # Cache
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://username:password@127.0.0.1:6379",
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.redis.RedisCache",
+#         "LOCATION": "redis://username:password@127.0.0.1:6379",
+#     }
+# }
 
 
 # Password validation
