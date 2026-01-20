@@ -5,12 +5,35 @@
 <!-- TODO: Make the title the title of the thread -->
 {% block title %}{% translate "Thread" %}{% endblock %}
 
+
+{% partialdef unresolved-thread-button %}
+<button id="thread-resolve" hx-ws:send hx-vals='{"action": "thread-resolve"}'>
+    {% translate "Resolve Thread" %}
+</button>
+{% endpartialdef %}
+
+{% partialdef resolved-thread-button %}
+<button id="thread-resolve" hx-ws:send hx-vals='{"action": "thread-unresolve"}'>
+    {% translate "Reopen Thread" %}
+</button>
+{% endpartialdef %}
+
 {% block content %}
 <main>
-    <article>
-        <h3>{{ object.thread_title }} </h3>
-        <p>{{ object.body }}</p>
+    <article hx-ws:connect="/ws/chat/{{object.pk}}" hx-target="#thread-resolve" hx-swap="outerHTML">
         <div class="flex-row">
+            <h3>{{ object.thread_title }} </h3>
+            {% if is_author %}
+            {% if object.is_resolved %}
+            {% partial resolved-thread-button %}
+            {% else %}
+            {% partial unresolved-thread-button %}
+            {% endif %}
+            {% endif %}
+        </div>
+        <p>{{ object.body }}</p>
+        <div class="flex-row flex-gap">
+            <p>{% translate "Participants:" %}</p>
             <span>{{ object.author }}</span>
             {% for watcher in object.thread_watchers %}
             <span>{{ watcher }}</span>
@@ -36,6 +59,7 @@
     <article hx-ws:connect="/ws/chat/{{object.pk}}" hx-target="#message-list" hx-swap="append" class="container">
         <form hx-ws:send id="chat-form">
             {% partialdef message_form inline %}
+            <input type="hidden" name="action" value="message-new">
             <textarea name="message" autocomplete="off"></textarea>
             <button type="submit">{% translate "Send" %}</button>
             {% endpartialdef %}

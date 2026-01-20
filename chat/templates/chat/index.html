@@ -7,30 +7,18 @@
 {% block content %}
 
 <main class="container">
-    <!-- <h1> -->
-    <!--     {% translate "Chat index page!" %} -->
-    <!-- </h1> -->
-    <!-- {% if user.is_authenticated %} -->
-    <!-- <p> -->
-    <!--     {% blocktranslate with username=user.username %}Hi {{username}}!{% endblocktranslate %} -->
-    <!-- </p> -->
-    <!-- <form method="post" action="{% url 'logout' %}"> -->
-    <!--     {% csrf_token %} -->
-    <!--     <button type="submit">{% translate "Log out" %}</button> -->
-    <!-- </form> -->
-    <!-- {% else %} -->
-    <!-- <p>{% translate "You are not logged in." %}</p> -->
-    <!-- <a href="{% url 'chat:login' %}">{% translate "Log in" %}</a> -->
-    <!-- {% endif %} -->
-
     {% if thread_list %}
     {% for thread in thread_list %}
     {% partialdef thread-card inline %}
     <article>
         <div class="flex-row flex-gap">
             <a href="{% url 'chat:thread_detail' thread.pk %}">{{ thread.thread_title }}</a>
+            <!-- {{ thread.is_resolved }} -->
+            <!-- {% if thread.is_resolved %} -->
+            <!-- {% translate "Resolved" %} -->
+            <!-- {% endif %} -->
             <label>
-                <input type="checkbox" {% if thread.is_resolved %} checked {% endif %}>
+                <input type="checkbox" disabled {% if thread.is_resolved %} checked {% endif %}>
                 {% translate "Resolved" %}
             </label>
             <span>
