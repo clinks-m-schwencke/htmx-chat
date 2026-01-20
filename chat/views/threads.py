@@ -91,7 +91,11 @@ def thread_post(request: HttpRequest) -> HttpResponse:
 
 def thread_get(request: HttpRequest, pk) -> HttpResponse:
     thread = get_object_or_404(Thread, pk=pk)
-    context = {"object": thread, "messages": thread.thread_messages.all()}
+    context = {
+        "object": thread,
+        "messages": thread.thread_messages.all(),
+        "is_author": request.user == thread.author,
+    }
     return TemplateResponse(request, "chat/thread_detail.html", context)
 
 

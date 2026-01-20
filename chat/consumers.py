@@ -4,11 +4,21 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.shortcuts import render
 from django.template.loader import get_template
+from django.utils.translation import gettext as _
 from .models import Message, Thread
+
+## TODO: Rewrite to handle different kinds of interations in single consumer
+## Thread resolve
+## Thread unresolve
+## Thread request resolve
+## Thread request unresolve ??
+## Thread deleted
+## Thread undeleted
+## Message edited
+## Message deleted
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
-
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
         self.user = None
@@ -22,16 +32,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Assign websocket data
         self.thread_id = self.scope["url_route"]["kwargs"]["thread_id"]
         self.group_name = f"chat_{self.thread_id}"
-
-        # print("####################")
-        # print("thread_id", self.thread_id)
-        # print("####################")
-
-        # self.thread = Thread.objects.get(pk=self.thread_id)
-
-        # print("####################")
-        # print("thread", self.thread)
-        # print("####################")
 
         self.user = self.scope["user"]
 
@@ -60,62 +60,164 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Extract data from JSON
         text_data_json = json.loads(text_data)
 
-        print("####################")
-        print("ws - receive: JSON", text_data_json)
-        print("####################")
+        # Get Data
+        data = text_data_json["values"]
 
+        # Get Action
+        action = data["action"]
+
+        print("action", action)
+
+        match action:
+            case "message-new":
+                await self.handle_chat_message_new(data)
+            case "message-edit":
+                pass
+            case "message-delete":
+                pass
+            case "thread-resolve":
+                await self.handle_thread_resolve(data)
+            case "thread-unresolve":
+                pass
+            case "thread-request-resolve":
+                pass
+            case "thread-request-unresolve":
+                pass
+            case "thread-delete":
+                pass
+            case "thread-undelete":
+                pass
+            case _:
+                print(f"Unhandled websocket event '{action}'")
+
+    ###################
+    # Action Handlers #
+    ###################
+
+    async def handle_chat_message_new(self, data):
+        print("####################")
+        print("ws:handler - handle_chat_message_new", data)
+        print("####################")
         # Get message
-        message = text_data_json["values"]["message"]
+        message = data["message"]
 
         # Save message to db
-        await self.save_message(self.thread_id, self.user, message)
+        await self.create_message(self.thread_id, self.user, message)
 
         # Send chat message event to all listeners
         await self.channel_layer.group_send(
             self.group_name,
             {
-                "type": "chat_message",
+                "type": "chat.message.new",
                 "message": message,
                 "username": self.user.username,
+                "target": "#message-list",
+                "swap": "append",
             },
         )
 
-    async def chat_message(self, event):
+    async def handle_thread_resolve(self, data):
         print("####################")
-        print("ws - chat_message", event)
+        print("ws:handler - handle_thread_resolve", data)
+        print("####################")
+
+        message = _("%(user)s has resolved the thread.") % {"user": self.user.username}
+        await self.create_message(self.thread_id, self.user, message)
+
+        await self.set_resolved(self.thread_id, True)
+
+        # Send thread resolved
+        await self.channel_layer.group_send(
+            self.group_name,
+            {
+                "type": "thread.resolved",
+                "is_resolved": True,
+            },
+        )
+        # Send chat message event to all listeners
+        await self.channel_layer.group_send(
+            self.group_name,
+            {
+                "type": "chat.message.new",
+                "message": message,
+                "username": self.user.username,
+                "target": "#message-list",
+                "swap": "append",
+            },
+        )
+
+    ####################
+    # Database Methods #
+    ####################
+
+    @sync_to_async
+    def create_message(self, thread_id, user, message):
+        print("####################")
+        print("ws:db - save_message", user, message)
+        print("####################")
+        thread = Thread.objects.get(pk=thread_id)
+        message = Message.objects.create(thread_id=thread, author=user, body=message)
+        message.save()
+
+    @sync_to_async
+    def set_resolved(self, thread_id, is_resolved):
+        print("####################")
+        print("ws:db - set_resolved", thread_id, is_resolved)
+        print("####################")
+        thread = Thread.objects.get(pk=thread_id)
+        thread.is_resolved = is_resolved
+        thread.save()
+
+    ############################
+    # Websocket Event handlers #
+    ############################
+
+    async def chat_message_new(self, event):
+        print("####################")
+        print("ws:event - chat_message", event)
         print("####################")
 
         # Extract message
         message = event["message"]
         username = event["username"]
+        target = event.get("target")
+        swap = event.get("swap")
 
         # Send message event to client
-        # await self.send(
-        #     text_data=json.dumps({"message": message, "username": event["username"]})
-        # )
         payload = get_template("chat/thread_detail.html#message_display").render(
             context={"message": {"author": username, "body": message}}
         )
-        # payload += (
-        #     "<hx-partial hx-target='#chat-form' hx-swap='innerHTML'>"
-        #     + get_template("chat/thread_detail.html#message_form").render({})
-        #     + "</hx-partial>"
-        # )
+
+        data = {"payload": payload}
+
+        if target:
+            data["target"] = target
+        if swap:
+            data["swap"] = swap
 
         print("####################")
         print("ws - chat_message payload", payload)
 
-        response = json.dumps({"payload": payload})
+        response = json.dumps(data)
         print("####################")
         print("ws - chat_message response", response)
 
         await self.send(text_data=response)
 
-    @sync_to_async
-    def save_message(self, thread_id, user, message):
+    async def thread_resolved(self, event):
+        """
+        Web socket event for resolving or unresolving a thread
+        """
+
         print("####################")
-        print("ws - save_message", user, message)
+        print("ws:event - thread_resolved", event)
         print("####################")
-        thread = Thread.objects.get(pk=thread_id)
-        message = Message.objects.create(thread_id=thread, author=user, body=message)
-        message.save()
+        is_resolved = event["is_resolved"]
+        template = (
+            "chat/thread_detail.html#resolved-thread-button"
+            if is_resolved
+            else "chat/thread_detail.html#unresolved-thread-button"
+        )
+        payload = get_template(template).render()
+        response = json.dumps({"payload": payload})
+        await self.send(text_data=response)
