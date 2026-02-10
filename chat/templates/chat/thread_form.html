@@ -3,7 +3,6 @@
 {% load i18n %}
 
 {% block title %}
-
 {% if is_new %}
 {% translate "New Thread" %}
 {% else %}
@@ -15,22 +14,27 @@
 
 <main class="container">
     <article>
-        <form method="post" action="/thread">
+        <form method="post" action="{{action}}">
             {% csrf_token %}
             <fieldset>
                 <label>
+                    {% if is_new %}
                     {% translate "New Thread" %}
-                    <input name="thread_title" type="text">
+                    {% else %}
+                    {% translate "Edit Thread" %}
+                    {% endif %}
+                    <input name="thread_title" type="text" value="{{ thread.thread_title }}">
                 </label>
                 <label>
                     {% translate "Watchers" %}
                     <select name="watchers" multiple>
-                        {% for w in watchers %}
-                        <option value="{{w.id}}">
-                            {% if w.first_name or w.last_name %}
-                            {{w.first_name}} {{w.last_name}}
+                        {% for m in members %}
+                        <option value="{{m.id}}" {% if m.is_watcher %}selected{% endif %}>
+                            <!-- <option value="{{m.id}}" selected> -->
+                            {% if m.first_name or m.last_name %}
+                            {{m.first_name}} {{m.last_name}}
                             {% else %}
-                            {{w.username}}
+                            {{m.username}}
                             {% endif %}
                         </option>
                         {% endfor %}
@@ -39,10 +43,16 @@
 
                 <label>
                     {% translate "Description" %}
-                    <textarea name="body"></textarea>
+                    <textarea name="body">{{ thread.body }}</textarea>
                 </label>
             </fieldset>
-            <button type="submit">{% translate "Create thread" %}</button>
+            <button type="submit">
+                {% if is_new %}
+                {% translate "Create thread" %}
+                {% else %}
+                {% translate "Update Thread" %}
+                {% endif %}
+            </button>
         </form>
     </article>
 

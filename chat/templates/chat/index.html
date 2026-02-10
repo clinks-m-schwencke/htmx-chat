@@ -10,51 +10,56 @@
     {% if thread_list %}
     {% for thread in thread_list %}
     {% partialdef thread-card inline %}
-    <article>
-        <div class="flex-row flex-gap">
-            <a href="{% url 'chat:thread_detail' thread.pk %}">{{ thread.thread_title }}</a>
-            <!-- {{ thread.is_resolved }} -->
-            <!-- {% if thread.is_resolved %} -->
-            <!-- {% translate "Resolved" %} -->
-            <!-- {% endif %} -->
-            <label>
-                <input type="checkbox" disabled {% if thread.is_resolved %} checked {% endif %}>
-                {% translate "Resolved" %}
-            </label>
-            <span>
-                {{ thread.author }}
-            </span>
-
-            {% for w in thread.watchers.all %}
-            <span>
-                {{ w.name }}
-            </span>
-            {% endfor %}
-        </div>
-        <section>
+    <a href="{% url 'chat:thread_detail' thread.pk %}">
+        <article {% if thread.is_resolved %} class="resolved" {% endif %}>
             <div class="flex-row flex-gap">
-                <p>
-                    {% if thread.latest_message_author %}
-                    {{ thread.latest_message_author }}
-                    {% else %}
+                <!-- <a href="{% url 'chat:thread_detail' thread.pk %}">{{ thread.thread_title }}</a> -->
+                {{ thread.thread_title }}
+                {% if thread.is_edited %}
+                <span class="no-border" data-tooltip="{% translate 'Edited' %}">
+                    {% include "chat/svg/pencil.html" %}
+                </span>
+                {% endif %}
+                {% if thread.is_resolved %}
+                <span class="no-border" data-tooltip="{% translate 'Resolved' %}">
+                    {% include "chat/svg/square-check-big.html" %}
+                </span>
+                {% endif %}
+                <span>
                     {{ thread.author }}
-                    {% endif %}
-                </p>
-                <p>
-                    {% if thread.latest_message_body %}
-                    {{ thread.latest_message_body }}
-                    {% else %}
-                    {{ thread.body }}
-                    {% endif %}
-                </p>
+                </span>
+
+                {% for w in thread.watchers.all %}
+                <span>
+                    {{ w }}
+                </span>
+                {% endfor %}
             </div>
-        </section>
-    </article>
+            <section>
+                <div class="flex-row flex-gap">
+                    <p>
+                        {% if thread.latest_message_author %}
+                        {{ thread.latest_message_author }}
+                        {% else %}
+                        {{ thread.author }}
+                        {% endif %}
+                    </p>
+                    <p>
+                        {% if thread.latest_message_body %}
+                        {{ thread.latest_message_body }}
+                        {% else %}
+                        {{ thread.body }}
+                        {% endif %}
+                    </p>
+                </div>
+            </section>
+        </article>
+    </a>
 
     {% endpartialdef %}
     {% endfor %}
     {% else %}
-    <p>No threads are available. Would you like to create one?</p>
+    <p>{% translate "No threads are available. Would you like to create one?" %}</p>
     {% endif %}
 </main>
 {% endblock %}

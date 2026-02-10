@@ -10,12 +10,8 @@ urlpatterns = [
     path("chat/<int:thread_id>", views.chat_handler, name="chat"),
     path("thread", views.thread_handler, name="thread"),
     path("thread/new", views.thread_new, name="thread_new"),
-    # Resolving and unresolving thread
-    # path("thread/close", views.thread_close, name="thread_close"),
-    # path("thread/open", views.thread_open, name="thread_open"),
-    path("thread/create", views.CreateThreadView.as_view(), name="thread_create"),
     path("thread/<int:pk>", views.thread_get, name="thread_detail"),
-    # path("thread/<int:pk>", views.thread_get, name="thread_detail"),
+    path("thread/<int:pk>/edit", views.thread_edit, name="thread_edit"),
     path("login", views.LoginView.as_view(), name="login"),
 ]
 # path("<int:pk>/", views.DetailView.as_view(), name="detail"),
