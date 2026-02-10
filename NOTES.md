@@ -229,4 +229,23 @@ For django's i18n, we need the GNU text tool `gettext`. We can install it with b
 brew install gettext
 ```
 
+In django templates, we can use translation using the `{% translate "text goes here" %}` tag.
+Django expects the original text to be english, there are some restrictions using a different base language.
 
+[Using a non-English base language](https://docs.djangoproject.com/en/6.0/topics/i18n/translation/#using-a-non-english-base-language)
+
+After adding new translation strings, you must run `makemessages` for each language
+
+```sh
+django-admin makemessages -l en
+```
+
+This well generate `.po` files for the language, or update the file with new translation strings
+
+After you have updated the translation files, you must compile them for use with django
+
+```sh
+django-admin compilemessages
+```
+
+NOTE: The messages will not show until they have been compiled

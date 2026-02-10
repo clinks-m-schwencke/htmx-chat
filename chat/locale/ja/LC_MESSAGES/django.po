@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-02 10:18+0900\n"
+"POT-Creation-Date: 2026-01-28 09:44+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,34 +18,103 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: chat/consumers.py:126
+#, python-format
+msgid "%(user)s has resolved the thread."
+msgstr "%(user)sは解決しました。"
+
 #: chat/templates/admin/base_site.html:8
 msgid "Django site admin"
 msgstr ""
+
+#: chat/templates/chat/base.html:59
+msgid "Settings"
+msgstr "設定"
+
+#: chat/templates/chat/base.html:74 chat/templates/chat/base.html:100
+msgid "Log out"
+msgstr "ログアウト"
+
+#: chat/templates/chat/base.html:94
+msgid "Really Log Out?"
+msgstr "本当にログアウトしますか？"
+
+#: chat/templates/chat/base.html:98
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: chat/templates/chat/create_thread.html:5
+#: chat/templates/chat/thread_form.html:8
+#: chat/templates/chat/thread_form.html:23
+msgid "New Thread"
+msgstr "新しいスレッド"
+
+#: chat/templates/chat/create_thread.html:14
+#: chat/templates/chat/thread_form.html:50
+msgid "Create thread"
+msgstr "スレッドを作成"
 
 #: chat/templates/chat/index.html:5
 msgid "Home"
 msgstr "ホーム"
 
-#: chat/templates/chat/index.html:12
-msgid "Chat index page!"
-msgstr "チャットのINDEXページ"
-
 #: chat/templates/chat/index.html:17
-msgid "Hi %(username)s!"
-msgstr "こんにちは、%(username)sさん！"
+msgid "edited"
+msgstr "編集"
 
 #: chat/templates/chat/index.html:21
-msgid "Log out"
-msgstr "ログアウト"
+msgid "Resolved"
+msgstr "解決"
 
-#: chat/templates/chat/index.html:24
-msgid "You are not logged in."
-msgstr "現在ログインされていません。"
-
-#: chat/templates/chat/index.html:25
-msgid "Log in"
-msgstr "ログイン"
+#: chat/templates/chat/index.html:56
+msgid "No threads are available. Would you like to create one?"
+msgstr "見れるスレッドがありません。スレッドを作成しませんか？"
 
 #: chat/templates/chat/login.html:12 chat/templates/chat/login.html:16
 msgid "Log In"
 msgstr "ログイン"
+
+#: chat/templates/chat/thread_detail.html:6
+msgid "Thread"
+msgstr "スレッド"
+
+#: chat/templates/chat/thread_detail.html:11
+msgid "Resolve Thread"
+msgstr "スレッドを解決する"
+
+#: chat/templates/chat/thread_detail.html:17
+msgid "Reopen Thread"
+msgstr "スレッドを再開する"
+
+#: chat/templates/chat/thread_detail.html:38
+msgid "Participants:"
+msgstr "参加者"
+
+#: chat/templates/chat/thread_detail.html:67
+msgid "Send"
+msgstr "送信"
+
+#: chat/templates/chat/thread_form.html:10
+#: chat/templates/chat/thread_form.html:25
+msgid "Edit Thread"
+msgstr "スレッドを編集"
+
+#: chat/templates/chat/thread_form.html:30
+msgid "Watchers"
+msgstr "参加者"
+
+#: chat/templates/chat/thread_form.html:46
+msgid "Description"
+msgstr "詳細"
+
+#~ msgid "Chat index page!"
+#~ msgstr "チャットのINDEXページ"
+
+#~ msgid "Hi %(username)s!"
+#~ msgstr "こんにちは、%(username)sさん！"
+
+#~ msgid "You are not logged in."
+#~ msgstr "現在ログインされていません。"
+
+#~ msgid "Log in"
+#~ msgstr "ログイン"

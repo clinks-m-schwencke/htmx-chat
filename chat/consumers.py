@@ -83,6 +83,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 pass
             case "thread-request-unresolve":
                 pass
+            case "thread-edit":
+                pass
             case "thread-delete":
                 pass
             case "thread-undelete":
@@ -145,6 +147,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "swap": "append",
             },
         )
+
+    async def handle_thread_edit(self, data):
+        print("####################")
+        print("ws:handler - handle_thread_edit", data)
+        print("####################")
 
     ####################
     # Database Methods #
@@ -220,4 +227,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         payload = get_template(template).render()
         response = json.dumps({"payload": payload})
+        await self.send(text_data=response)
+
+    async def thread_edited(self, event):
+        """
+        Websocket event for editing a thread's title / body
+        """
+        print("####################")
+        print("ws:event - thread_edited", event)
+        print("####################")
+        payload = get_template("chat/thread_detail#thread-title").render()
+        data = {
+            "payload": payload,
+            "target": "#thread-title",
+            "swap": "outerHTML",
+        }
+        response = json.dumps(data)
         await self.send(text_data=response)

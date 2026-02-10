@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-02 10:18+0900\n"
+"POT-Creation-Date: 2026-01-28 09:44+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,35 +18,91 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: chat/consumers.py:126
+#, python-format
+msgid "%(user)s has resolved the thread."
+msgstr ""
+
 #: chat/templates/admin/base_site.html:8
 msgid "Django site admin"
+msgstr ""
+
+#: chat/templates/chat/base.html:59
+msgid "Settings"
+msgstr ""
+
+#: chat/templates/chat/base.html:74 chat/templates/chat/base.html:100
+msgid "Log out"
+msgstr ""
+
+#: chat/templates/chat/base.html:94
+msgid "Really Log Out?"
+msgstr ""
+
+#: chat/templates/chat/base.html:98
+msgid "Cancel"
+msgstr ""
+
+#: chat/templates/chat/create_thread.html:5
+#: chat/templates/chat/thread_form.html:8
+#: chat/templates/chat/thread_form.html:23
+msgid "New Thread"
+msgstr ""
+
+#: chat/templates/chat/create_thread.html:14
+#: chat/templates/chat/thread_form.html:50
+msgid "Create thread"
 msgstr ""
 
 #: chat/templates/chat/index.html:5
 msgid "Home"
 msgstr ""
 
-#: chat/templates/chat/index.html:12
-msgid "Chat index page!"
-msgstr ""
-
 #: chat/templates/chat/index.html:17
-#, python-format
-msgid "Hi %(username)s!"
+msgid "edited"
 msgstr ""
 
 #: chat/templates/chat/index.html:21
-msgid "Log out"
+msgid "Resolved"
 msgstr ""
 
-#: chat/templates/chat/index.html:24
-msgid "You are not logged in."
-msgstr ""
-
-#: chat/templates/chat/index.html:25
-msgid "Log in"
+#: chat/templates/chat/index.html:56
+msgid "No threads are available. Would you like to create one?"
 msgstr ""
 
 #: chat/templates/chat/login.html:12 chat/templates/chat/login.html:16
 msgid "Log In"
+msgstr ""
+
+#: chat/templates/chat/thread_detail.html:6
+msgid "Thread"
+msgstr ""
+
+#: chat/templates/chat/thread_detail.html:11
+msgid "Resolve Thread"
+msgstr ""
+
+#: chat/templates/chat/thread_detail.html:17
+msgid "Reopen Thread"
+msgstr ""
+
+#: chat/templates/chat/thread_detail.html:38
+msgid "Participants:"
+msgstr ""
+
+#: chat/templates/chat/thread_detail.html:67
+msgid "Send"
+msgstr ""
+
+#: chat/templates/chat/thread_form.html:10
+#: chat/templates/chat/thread_form.html:25
+msgid "Edit Thread"
+msgstr ""
+
+#: chat/templates/chat/thread_form.html:30
+msgid "Watchers"
+msgstr ""
+
+#: chat/templates/chat/thread_form.html:46
+msgid "Description"
 msgstr ""

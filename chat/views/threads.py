@@ -1,3 +1,5 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
@@ -7,13 +9,9 @@ from django.http import (
     HttpResponseNotAllowed,
     HttpResponseRedirect,
 )
-
 from django.urls import reverse
-
-
-from django.db.models import Subquery, OuterRef
+from django.db.models import Subquery, OuterRef, Exists
 from django.template.response import TemplateResponse
-
 from chat.models import Thread, Message, Project
 from django.contrib.auth import get_user_model
 
@@ -43,17 +41,25 @@ def thread_handler(request: HttpRequest, thread_id=None) -> HttpResponse:
             return thread_post(request)
         case "GET":
             return thread_get(request, thread_id)
-        # case "PUT":
-        #     return thread_put(request, thread_id)
+        case "PUT":
+            return thread_put(request, thread_id)
         case _:
             return HttpResponseNotAllowed(["GET", "POST"])
+
+
+def thread_get(request: HttpRequest, pk) -> HttpResponse:
+    thread = get_object_or_404(Thread, pk=pk)
+    context = {
+        "thread": thread,
+        "messages": thread.thread_messages.all(),
+        "is_author": request.user == thread.author,
+    }
+    return TemplateResponse(request, "chat/thread_detail.html", context)
 
 
 def thread_post(request: HttpRequest) -> HttpResponse:
     # NOTE: Manual form validation for practice
     # Can also use the 'Form' class
-    form_errors = {}
-
     project = Project.objects.get(pk=1)
     thread_title = request.POST.get("thread_title")
     watchers = request.POST.get("watchers") or []
@@ -89,28 +95,94 @@ def thread_post(request: HttpRequest) -> HttpResponse:
     return HttpResponseRedirect(reverse("chat:thread_detail", args=(new_thread.pk,)))
 
 
-def thread_get(request: HttpRequest, pk) -> HttpResponse:
+def thread_put(request: HttpRequest, pk) -> HttpResponse:
     thread = get_object_or_404(Thread, pk=pk)
-    context = {
-        "object": thread,
-        "messages": thread.thread_messages.all(),
-        "is_author": request.user == thread.author,
-    }
-    return TemplateResponse(request, "chat/thread_detail.html", context)
 
+    # NOTE: Manual form validation for practice
+    # Can also use the 'Form' class
+    # project = Project.objects.get(pk=1)
+    thread_title = request.POST.get("thread_title")
+    watchers = request.POST.get("watchers") or []
+    body = request.POST.get("body") or ""
 
-def thread_put(request: HttpRequest) -> HttpResponse:
-    pass
+    # Check post data for valid form
+    if not thread_title or thread_title.strip() == "":
+        # If form is invalid, return 422 unprocessable content
+        watchers = get_user_model().objects.exclude(id=request.user.id)
+        return TemplateResponse(
+            request,
+            "chat/thread_form.html",
+            {
+                "is_new": False,
+                "watchers": watchers,
+                "error_message": "Title empty",  # TODO: Make proper translation string
+            },
+        )
+
+    # Form is valid!
+    thread.thread_title = thread_title
+    thread.body = body
+    thread.watchers.set(watchers)
+    thread.is_edited = True
+
+    thread.save()
+
+    # Send new name to thread viewers
+    channel_layer = get_channel_layer()
+    group_name = f"chat_{thread.id}"
+
+    # Convert async method to sync
+    async_to_sync(channel_layer.group_send)(
+        group_name,
+        {
+            "type": "thread.edited",
+            "title": thread_title,
+            "body": body,
+        },
+    )
+
+    return HttpResponseRedirect(reverse("chat:thread_detail", args=(thread.pk,)))
 
 
 def thread_new(request: HttpRequest) -> HttpResponse:
-    watchers = get_user_model().objects.exclude(id=request.user.id)
+    members = get_user_model().objects.exclude(id=request.user.id)
     return TemplateResponse(
         request,
         "chat/thread_form.html",
         {
             "is_new": True,
-            "watchers": watchers,
+            "members": members,
+            "action": "/thread",
+        },
+    )
+
+
+def thread_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    if request.method == "POST" or request.method == "PUT":
+        return thread_put(request, pk)
+
+    thread = get_object_or_404(Thread, pk=pk)
+    members = (
+        get_user_model()
+        .objects.exclude(id=request.user.id)
+        .annotate(
+            is_watcher=Exists(
+                Thread.objects.filter(id=thread.id, watchers=OuterRef("pk"))
+            )
+        )
+    )
+
+    for m in members:
+        print("member: ", m, m.is_watcher)
+
+    return TemplateResponse(
+        request,
+        "chat/thread_form.html",
+        {
+            "is_new": False,
+            "members": members,
+            "action": f"/thread/{thread.pk}/edit",
+            "thread": thread,
         },
     )
 

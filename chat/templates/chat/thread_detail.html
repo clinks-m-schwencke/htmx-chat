@@ -1,5 +1,6 @@
 {% extends "chat/base.html" %}
 
+{% load static %}
 {% load i18n %}
 
 <!-- TODO: Make the title the title of the thread -->
@@ -20,26 +21,34 @@
 
 {% block content %}
 <main>
-    <article hx-ws:connect="/ws/chat/{{object.pk}}" hx-target="#thread-resolve" hx-swap="outerHTML">
+    {% partialdef thread-header inline %}
+    <article hx-ws:connect="/ws/chat/{{thread.pk}}" hx-target="#thread-resolve" hx-swap="outerHTML">
         <div class="flex-row">
-            <h3>{{ object.thread_title }} </h3>
+            <h3>{{ thread.thread_title }} </h3>
+            {% if thread.is_edited %}
+            <span class="no-border" data-tooltip="{% translate 'Edited' %}">
+                {% include "chat/svg/pencil.html" %}
+            </span>
+            {% endif %}
             {% if is_author %}
-            {% if object.is_resolved %}
+            {% if thread.is_resolved %}
             {% partial resolved-thread-button %}
             {% else %}
             {% partial unresolved-thread-button %}
             {% endif %}
+            <a href="{% url 'chat:thread_edit' thread.pk %}">Edit Thread</a>
             {% endif %}
         </div>
-        <p>{{ object.body }}</p>
+        <p>{{ thread.body }}</p>
         <div class="flex-row flex-gap">
             <p>{% translate "Participants:" %}</p>
-            <span>{{ object.author }}</span>
-            {% for watcher in object.thread_watchers %}
-            <span>{{ watcher }}</span>
+            <span>{{ thread.author }}</span>
+            {% for w in thread.watchers.all %}
+            <span>{{ w }}</span>
             {% endfor %}
         </div>
     </article>
+    {% endpartialdef %}
     <section id="message-list">
         {% for message in messages %}
         {% partialdef message_display inline %}
@@ -56,8 +65,8 @@
     </section>
 </main>
 <footer>
-    <article hx-ws:connect="/ws/chat/{{object.pk}}" hx-target="#message-list" hx-swap="append" class="container">
-        <form hx-ws:send id="chat-form">
+    <article hx-ws:connect="/ws/chat/{{thread.pk}}" hx-target="#message-list" hx-swap="append" class="container">
+        <form hx-ws:send id="chat-form" hx-on:htmx:after:ws:send="this.reset()">
             {% partialdef message_form inline %}
             <input type="hidden" name="action" value="message-new">
             <textarea name="message" autocomplete="off"></textarea>
